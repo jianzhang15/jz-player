@@ -13,7 +13,9 @@ $ yarn add Jplayer
 ```
 $ npm i Jplayer
 ```
+## 示例图
 
+![Screenshot](https://github.com/jianzhang15/Jplayer/blob/main/demo.png)
 
 ## 运行时要求
 
