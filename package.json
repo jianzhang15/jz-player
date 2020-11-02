@@ -1,0 +1,91 @@
+{
+  "name": "vue-aplayer",
+  "version": "1.6.0",
+  "description": "Easy-to-use music player for Vue 2.x",
+  "main": "dist/vue-aplayer.min.js",
+  "files": [
+    "src",
+    "!src/demo/*",
+    "dist/*.js"
+  ],
+  "scripts": {
+    "start": "yarn run dev",
+    "dev": "webpack-dev-server --inline --hot --progress --colors --host 0.0.0.0 --port 3000 --config webpack.demo.config.js",
+    "build": "set NODE_ENV=production && webpack --progress --hide-modules",
+    "build:demo": "set NODE_ENV=production && webpack --progress --hide-modules --config webpack.demo.config.js",
+    "prepublishOnly": "yarn run build",
+    "predeploy": "yarn add hls.js && yarn run build:demo && echo 'vue-aplayer.js.org' > demo/CNAME",
+    "lint": "eslint --ext .js,.vue src",
+    "test": "yarn run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SevenOutman/vue-aplayer.git"
+  },
+  "keywords": [
+    "vue",
+    "aplayer",
+    "vue-aplayer",
+    "music-player",
+    "html5",
+    "component",
+    "vue-compoents"
+  ],
+  "author": {
+    "name": "Doma",
+    "email": "leishenghao@126.com",
+    "url": "https://github.com/SevenOutman"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SevenOutman/vue-aplayer/issues"
+  },
+  "homepage": "https://github.com/SevenOutman/vue-aplayer#readme",
+  "peerDependencies": {
+    "vue": "^2.5.16"
+  },
+  "devDependencies": {
+    "autoprefixer": "9.6.1",
+    "babel-core": "6.26.3",
+    "babel-eslint": "10.1.0",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-stage-2": "6.24.1",
+    "css-loader": "2.1.1",
+    "cz-conventional-changelog": "2.1.0",
+    "eslint": "5.16.0",
+    "eslint-friendly-formatter": "4.0.1",
+    "eslint-loader": "2.2.1",
+    "eslint-plugin-vue": "5.2.3",
+    "file-loader": "3.0.1",
+    "hls.js": "0.12.4",
+    "html-webpack-plugin": "3.2.0",
+    "node-sass": "4.12.0",
+    "postcss-loader": "3.0.0",
+    "sass-loader": "7.2.0",
+    "style-loader": "0.23.1",
+    "svg-inline-loader": "0.8.0",
+    "url-loader": "1.1.2",
+    "vue": "2.6.10",
+    "vue-html-loader": "1.2.4",
+    "vue-loader": "14.2.2",
+    "vue-template-compiler": "2.6.10",
+    "webpack": "4.39.2",
+    "webpack-cli": "3.1.2",
+    "webpack-dev-server": "3.8.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "wavesurfer.js": "^4.2.0"
+  }
+}
