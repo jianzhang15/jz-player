@@ -5,17 +5,17 @@
 ### Node
 
 ```
-$ yarn add Jplayer
+$ yarn add jz-player
 ```
 
 或者如果你选择 `npm`
 
 ```
-$ npm i Jplayer
+$ npm i jz-player
 ```
 ## 示例图
 
-![Screenshot](https://github.com/jianzhang15/Jplayer/blob/main/demo.png)
+![Screenshot](https://github.com/jianzhang15/jz-player/blob/main/demo.png)
 
 ## 运行时要求
 
