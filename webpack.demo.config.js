@@ -64,16 +64,12 @@ module.exports = {
     port: 3000,
     disableHostCheck: true,
     proxy: {
-      '/aplayer': {
-        target: 'https://cn-east-17-aplayer-35525609.oss.dogecdn.com/',
+      '/api': {
+        target: 'http://192.168.50.69:8077/',
         secure: false,
         changeOrigin: true,
-        headers: {
-          host: 'vue-aplayer.js.org',
-          Referer: 'https://vue-aplayer.js.org/',
-        },
         pathRewrite (path) {
-          return path.replace(/^\/aplayer/, '')
+          return path.replace(/^\/api/, '')
         },
       },
     },

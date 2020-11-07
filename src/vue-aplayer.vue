@@ -52,7 +52,6 @@
         <img v-else src="./assets/open.png" style="width: 20px;"/>
       </div>
     </div>
-    <audio ref="audio"></audio>
     <music-list
       :show="showList && !mini"
       :current-music="currentMusic"
@@ -203,7 +202,7 @@
        */
       volume: {
         type: Number,
-        default: 0.8,
+        default: 1,
         validator (value) {
           return value >= 0 && value <= 1
         },
@@ -295,15 +294,11 @@
           normalize: true,
         },
         waveLoading:false,
-        isTogglePanel:false
+        isTogglePanel:false,
+        afterLoadPlay:true
       }
     },
     computed: {
-      // alias for $refs.audio
-      audio () {
-        return this.$refs.audio
-      },
-
       // sync music
       currentMusic: {
         get () {
@@ -430,6 +425,7 @@
       loadWave (){
         return new Promise((resolve,reject)=>{
           if(this.wavesurfer){
+            this.wavesurfer.stop()
             document.querySelector("#wavesurfer").childNodes.forEach(item=>{
               item.remove()
             })
@@ -439,9 +435,11 @@
           }
           this.wavesurfer = wavesurfer.create(this.options)
           this.wavesurfer.load(this.internalMusic.src);
-          this.wavesurfer.setVolume(0)
           this.wavesurfer.on("ready", () => {
             this.waveLoading=false
+            this.onAudioCanplay()
+            this.play()
+            if(!this.afterLoadPlay) this.pause()
             resolve()
           });
         })
@@ -479,51 +477,19 @@
       // play/pause
 
       toggle () {
-        if (!this.audio.paused) {
+        if (this.isPlaying) {
           this.pause()
         } else {
           this.play()
         }
       },
       play () {
-        if (this.mutex) {
-          if (activeMutex && activeMutex !== this) {
-            activeMutex.pause()
-          }
-          activeMutex = this
-        }
-        // handle .play() Promise
-        const audioPlayPromise = this.audio.play()
+        this.isPlaying=true
         this.wavesurfer.play()
-        if (audioPlayPromise) {
-          return this.audioPlayPromise = new Promise((resolve, reject) => {
-            // rejectPlayPromise is to force reject audioPlayPromise if it's still pending when pause() is called
-            this.rejectPlayPromise = reject
-            audioPlayPromise.then((res) => {
-              this.rejectPlayPromise = null
-              resolve(res)
-            }).catch(warn)
-          })
-        }
       },
       pause () {
-        this.audioPlayPromise
-          .then(() => {
-            this.audio.pause()
-            this.wavesurfer.pause()
-          })
-          // Avoid force rejection throws Uncaught
-          .catch(() => {
-            this.audio.pause()
-            this.wavesurfer.pause()
-          })
-
-        // audioPlayPromise is still pending
-        if (this.rejectPlayPromise) {
-          // force reject playPromise
-          this.rejectPlayPromise()
-          this.rejectPlayPromise = null
-        }
+        this.isPlaying=false
+        this.wavesurfer.pause()
       },
 
       // progress bar
@@ -532,20 +498,10 @@
         this.wasPlayingBeforeSeeking = this.isPlaying
         this.pause()
         this.isSeeking = true
-
-        // handle load failures
-        if (!isNaN(this.audio.duration)) {
-          this.audio.currentTime = this.audio.duration * val
-          this.wavesurfer.seekTo(val);
-        }
+        this.wavesurfer.seekTo(val);
       },
       onProgressDragging (val) {
-        if (isNaN(this.audio.duration)) {
-          this.playStat.playedTime = 0
-        } else {
-          this.audio.currentTime = this.audio.duration * val
-          this.wavesurfer.seekTo(val);
-        }
+        this.wavesurfer.seekTo(val);
       },
       onProgressDragEnd (val) {
         this.isSeeking = false
@@ -557,14 +513,14 @@
 
       // volume
 
-      toggleMute () {
-        this.setAudioMuted(!this.audio.muted)
+      toggleMute (event) {
+        this.setAudioMuted(!this.wavesurfer.getMute())
       },
       setAudioMuted (val) {
-        this.audio.muted = val
+        this.wavesurfer.setMute(val)
       },
       setAudioVolume (val) {
-        this.audio.volume = val
+        this.wavesurfer.setVolume(val)
         if (val > 0) {
           this.setAudioMuted(false)
         }
@@ -613,6 +569,7 @@
         if (this.currentMusic === song) {
           this.toggle()
         } else {
+          this.afterLoadPlay=true
           this.currentMusic = song
           // this.thenPlay()
         }
@@ -627,36 +584,36 @@
       onAudioPause () {
         this.isPlaying = false
       },
-      onAudioWaiting () {
-        this.isLoading = true
-      },
       onAudioCanplay () {
+        this.initAudio()
+        this.playStat.duration = this.wavesurfer.getDuration()
+        this.playStat.loadedTime = this.wavesurfer.getDuration()
+        this.playStat.playedTime=0;
         this.isLoading = false
       },
       onAudioDurationChange () {
-        if (this.audio.duration !== 1) {
-          this.playStat.duration = this.audio.duration
+        if (this.wavesurfer.getDuration() !== 1) {
+          this.playStat.duration = this.wavesurfer.getDuration()
         }
       },
       onAudioProgress () {
-        if (this.audio.buffered.length) {
-          this.playStat.loadedTime = this.audio.buffered.end(this.audio.buffered.length - 1)
-        } else {
-          this.playStat.loadedTime = 0
-        }
+        this.playStat.loadedTime = this.wavesurfer.getDuration()
       },
       onAudioTimeUpdate () {
-        this.playStat.playedTime = this.audio.currentTime
+        this.playStat.playedTime = this.wavesurfer.getCurrentTime()
       },
       onAudioSeeking () {
-        this.playStat.playedTime = this.audio.currentTime
+        this.playStat.playedTime = this.wavesurfer.getCurrentTime()
+        if(this.isPlaying) this.thenPlay()
       },
       onAudioSeeked () {
-        this.playStat.playedTime = this.audio.currentTime
+        this.playStat.playedTime = this.wavesurfer.getCurrentTime()
       },
-      onAudioVolumeChange () {
-        this.audioVolume = this.audio.volume
-        this.isAudioMuted = this.audio.muted
+      onAudioVolumeChange (e) {
+        this.$nextTick(_=>{
+          this.audioVolume = this.wavesurfer.getVolume()
+          this.isAudioMuted = this.wavesurfer.getMute()
+        })
       },
       onAudioEnded () {
         // determine next song according to shuffle and repeat
@@ -665,72 +622,38 @@
             this.shuffledList = this.getShuffledList()
           }
           this.playIndex++
-          this.thenPlay()
+          this.afterLoadPlay=true
         } else if (this.repeatMode === REPEAT.REPEAT_ONE) {
-          this.thenPlay()
+          this.afterLoadPlay=true
         } else {
           this.playIndex++
           if (this.playIndex !== 0) {
-            this.thenPlay()
+            this.afterLoadPlay=true
           } else if (this.shuffledList.length === 1) {
-            this.audio.currentTime = 0
+            this.wavesurfer.seekTo(0)
+          }else{
+            this.afterLoadPlay=false
           }
         }
       },
 
       initAudio () {
 
-        // since 1.4.0 Audio attributes as props
-
-        this.audio.controls = this.shouldShowNativeControls
-        this.audio.muted = this.muted
-        this.audio.preload = this.preload
-        this.audio.volume = this.volume
-
-
-        // since 1.4.0 Emit as many native audio events
-        // @see https://developer.mozilla.org/en-US/docs/Web/Guide/Events/Media_events
-
-        const mediaEvents = [
-          'abort',
-          'canplay', 'canplaythrough',
-          'durationchange',
-          'emptied', 'encrypted', 'ended', 'error',
-          'interruptbegin', 'interruptend',
-          'loadeddata', 'loadedmetadata', 'loadstart',
-          'mozaudioavailable',
-          'pause', 'play', 'playing', 'progress',
-          'ratechange',
-          'seeked', 'seeking', 'stalled', 'suspend',
-          'timeupdate',
-          'volumechange',
-          'waiting',
-        ]
-        mediaEvents.forEach(event => {
-          this.audio.addEventListener(event, e => this.$emit(event, e))
-        })
-
-
         // event handlers
         // they don't emit native media events
 
-        this.audio.addEventListener('play', this.onAudioPlay)
-        this.audio.addEventListener('pause', this.onAudioPause)
-        this.audio.addEventListener('abort', this.onAudioPause)
-        this.audio.addEventListener('waiting', this.onAudioWaiting)
-        this.audio.addEventListener('canplay', this.onAudioCanplay)
-        this.audio.addEventListener('progress', this.onAudioProgress)
-        this.audio.addEventListener('durationchange', this.onAudioDurationChange)
-        this.audio.addEventListener('seeking', this.onAudioSeeking)
-        this.audio.addEventListener('seeked', this.onAudioSeeked)
-        this.audio.addEventListener('timeupdate', this.onAudioTimeUpdate)
-        this.audio.addEventListener('volumechange', this.onAudioVolumeChange)
-        this.audio.addEventListener('ended', this.onAudioEnded)
-
-
-        if (this.currentMusic) {
-          this.audio.src = this.currentMusic.src
-        }
+        // this.audio.addEventListener('play', this.onAudioPlay)
+        // this.audio.addEventListener('pause', this.onAudioPause)
+        // this.audio.addEventListener('abort', this.onAudioPause)
+        // this.audio.addEventListener('progress', this.onAudioProgress)
+        // this.audio.addEventListener('durationchange', this.onAudioDurationChange)
+        this.wavesurfer.on('seek',this.onAudioSeeking)
+        this.wavesurfer.on('audioprocess',this.onAudioTimeUpdate)
+        this.wavesurfer.on('volume',this.onAudioVolumeChange)
+        this.wavesurfer.on('finish',this.onAudioEnded)
+        // if (this.currentMusic) {
+        //   this.audio.src = this.currentMusic.src
+        // }
       },
 
       setSelfAdaptingTheme () {
@@ -769,33 +692,7 @@
           // async
           await this.loadWave()
           this.setSelfAdaptingTheme()
-          const src = music.src
-          // HLS support
-          if (/\.m3u8(?=(#|\?|$))/.test(src)) {
-            if (this.audio.canPlayType('application/x-mpegURL') || this.audio.canPlayType('application/vnd.apple.mpegURL')) {
-              this.audio.src = src
-            } else {
-              try {
-                const Hls = require('hls.js')
-                if (Hls.isSupported()) {
-                  if (!this.hls) {
-                    this.hls = new Hls()
-                  }
-                  this.hls.loadSource(src)
-                  this.hls.attachMedia(this.audio)
-                } else {
-                  warn('HLS is not supported on your browser')
-                  this.audio.src = src
-                }
-              } catch (e) {
-                warn('hls.js is required to support m3u8')
-                this.audio.src = src
-              }
-            }
-          } else {
-            this.audio.src = src
-          }
-          this.thenPlay()
+          if(this.playIndex!=0) this.thenPlay()
           // self-adapting theme color
         },
       },
@@ -803,17 +700,17 @@
       // since 1.4.0
       // observe controls, muted, preload, volume
 
-      shouldShowNativeControls (val) {
-        this.audio.controls = val
-      },
+      // shouldShowNativeControls (val) {
+      //   this.audio.controls = val
+      // },
       isAudioMuted (val) {
-        this.audio.muted = val
+        this.wavesurfer.setMute(val)
       },
-      preload (val) {
-        this.audio.preload = val
-      },
+      // preload (val) {
+      //   this.audio.preload = val
+      // },
       audioVolume (val) {
-        this.audio.volume = val
+        this.wavesurfer.setVolume(val)
       },
 
       // sync muted, volume
@@ -837,7 +734,7 @@
     beforeCreate () {
       if (!VueAPlayer.disableVersionBadge && !versionBadgePrinted) {
         // version badge
-        console.log(`\n\n %c Vue-APlayer ${VERSION} %c vue-aplayer.js.org \n`, 'color: #fff; background:#41b883; padding:5px 0;', 'color: #fff; background: #35495e; padding:5px 0;')
+        console.log(`\n\n %c 国音Speakin音乐播放器${VERSION} %c\n`, 'color: #fff; background:#41b883; padding:5px 0;', 'color: #fff; background: #35495e; padding:5px 0;')
         versionBadgePrinted = true
       }
     },
@@ -845,7 +742,7 @@
       this.shuffledList = this.getShuffledList()
     },
     async mounted () {
-      this.initAudio()
+      this.afterLoadPlay=this.autoplay
       await this.loadWave()
       this.setSelfAdaptingTheme()
       if (this.autoplay) this.play()
@@ -982,6 +879,7 @@
     width: 500px;
     bottom: 20px;
     right: 20px;
+    z-index:99999
   }
 
   @keyframes aplayer-roll {

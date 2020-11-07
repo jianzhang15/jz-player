@@ -3,7 +3,7 @@
     <icon-button
       :class="`aplayer-icon-${volumeIcon}`"
       :icon="volumeIcon"
-      @click.native="$emit('togglemute')"
+      @click.native="togglemute($event)"
     />
     <div
       class="aplayer-volume-bar-wrap"
@@ -42,6 +42,9 @@
       },
     },
     methods: {
+      togglemute (event){
+        this.$emit('togglemute',event)
+      },
       adjustVolume (e) {
         let percentage = (barHeight - e.clientY + getElementViewTop(this.$refs.bar)) / barHeight
         percentage = percentage > 0 ? percentage : 0

@@ -29,20 +29,16 @@
         list3: [
           {
             title: '前前前世',
-            src: 'https://m10.music.126.net/20201102203723/ddcb87f2a06d86e7cb28501d262573ea/yyaac/0f0c/0e0b/065b/8f6e502bbb9acfdddce21126d33d5bf2.m4a',
+            src: '/api/file/download?audioId=5fa4fdbc9c1f9b382c9bcf9b',
           },
           {
             title: '光るなら.m3u8',
-            src: 'https://m10.music.126.net/20201102203723/ddcb87f2a06d86e7cb28501d262573ea/yyaac/0f0c/0e0b/065b/8f6e502bbb9acfdddce21126d33d5bf2.m4a',
+            src: '/api/file/download?audioId=5fa4fdbd9c1f9b382c9bcfa4',
           },
           {
             title: '回レ！雪月花',
-            src: 'https://m10.music.126.net/20201102203723/ddcb87f2a06d86e7cb28501d262573ea/yyaac/0f0c/0e0b/065b/8f6e502bbb9acfdddce21126d33d5bf2.m4a',
-          },
-          {
-            title: 'あっちゅ～ま青春!',
-            src: 'https://m10.music.126.net/20201102203723/ddcb87f2a06d86e7cb28501d262573ea/yyaac/0f0c/0e0b/065b/8f6e502bbb9acfdddce21126d33d5bf2.m4a',
-          },
+            src: '/api/file/download?audioId=5fa4fdbc9c1f9b382c9bcf9e',
+          }
         ],
       }
     },
