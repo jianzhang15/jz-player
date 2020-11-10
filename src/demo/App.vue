@@ -29,7 +29,11 @@
         list3: [
           {
             title: '前前前世',
-            src: 'https://m701.music.126.net/20201109222545/be6581a492620891aef698f8084ef9b3/jdyyaac/0653/070c/0e0b/19eddcb8ad0f9f90c9a99ac37d10af21.m4a',
+            src: '/api/file/download?audioId=5faa9fb69c1f9b8308da7891',
+          },
+          {
+            title: '前前前世',
+            src: '/api/file/download?audioId=5faa9f0f10986367500528bf',
           }
         ],
       }

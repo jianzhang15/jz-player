@@ -434,9 +434,8 @@
               item.remove()
             })
             this.wavesurfer=null
-          }else{
-            this.waveLoading=true
           }
+          this.waveLoading=true
           this.wavesurfer = wavesurfer.create(this.options)
           this.wavesurfer.load(this.internalMusic.src);
           this.wavesurfer.on("ready", () => {
