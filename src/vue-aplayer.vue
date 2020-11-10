@@ -227,7 +227,7 @@
        */
       repeat: {
         type: String,
-        default: REPEAT.NO_REPEAT,
+        default: "REPEAT.NO_REPEAT",
       },
     },
     data () {
@@ -405,14 +405,17 @@
       repeatMode: {
         get () {
           switch (this.internalRepeat) {
-            case REPEAT.NONE:
-            case REPEAT.NO_REPEAT:
+            case "REPEAT.NONE":
+            case "REPEAT.NO_REPEAT":
               return REPEAT.NO_REPEAT
-            case REPEAT.MUSIC:
-            case REPEAT.REPEAT_ONE:
+              break;
+            case "REPEAT.MUSIC":
+            case "REPEAT.REPEAT_ONE":
               return REPEAT.REPEAT_ONE
+              break;
             default:
               return REPEAT.REPEAT_ALL
+              break;
           }
         },
         set (val) {
@@ -423,6 +426,7 @@
     },
     methods: {
       loadWave (){
+        this.isTogglePanel=false
         return new Promise((resolve,reject)=>{
           if(this.wavesurfer){
             this.wavesurfer.stop()
@@ -484,10 +488,14 @@
         }
       },
       play () {
+        this.$emit("play",this.currentMusic)
+        this.isTogglePanel=false
         this.isPlaying=true
         this.wavesurfer.play()
       },
       pause () {
+        this.$emit("pause",this.currentMusic)
+        this.isTogglePanel=false
         this.isPlaying=false
         this.wavesurfer.pause()
       },
@@ -624,8 +632,12 @@
           this.playIndex++
           this.afterLoadPlay=true
         } else if (this.repeatMode === REPEAT.REPEAT_ONE) {
-          this.afterLoadPlay=true
-        } else {
+          this.wavesurfer.seekTo(0)
+        } else if(this.repeatMode === REPEAT.NO_REPEAT){
+          this.$emit("end",this.currentMusic)
+          this.pause()
+          this.wavesurfer.seekTo(0)
+        }else {
           this.playIndex++
           if (this.playIndex !== 0) {
             this.afterLoadPlay=true
@@ -678,8 +690,8 @@
         }
       },
       togglePanel (){
-        if(this.isTogglePanel===false) this.showList=false;
-        this.isTogglePanel=!this.isTogglePanel
+        // if(this.isTogglePanel===false) this.showList=false;
+        this.isTogglePanel=true
       }
     },
     watch: {
@@ -776,7 +788,7 @@
     line-height: initial;
     transition: all 0.5s;
     &.isCollpase{
-      width: 92px;
+      width: 0;
     }
     * {
       box-sizing: content-box;

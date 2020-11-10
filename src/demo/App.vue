@@ -29,15 +29,7 @@
         list3: [
           {
             title: '前前前世',
-            src: '/api/file/download?audioId=5fa4fdbc9c1f9b382c9bcf9b',
-          },
-          {
-            title: '光るなら.m3u8',
-            src: '/api/file/download?audioId=5fa4fdbd9c1f9b382c9bcfa4',
-          },
-          {
-            title: '回レ！雪月花',
-            src: '/api/file/download?audioId=5fa4fdbc9c1f9b382c9bcf9e',
+            src: 'https://m701.music.126.net/20201109222545/be6581a492620891aef698f8084ef9b3/jdyyaac/0653/070c/0e0b/19eddcb8ad0f9f90c9a99ac37d10af21.m4a',
           }
         ],
       }
