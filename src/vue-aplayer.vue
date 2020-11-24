@@ -25,7 +25,7 @@
         <div class="aplayer-music">
           <!-- <span class="aplayer-title">{{ currentMusic.title || 'Untitled' }}</span>
           <span class="aplayer-author">{{ currentMusic.artist || 'Unknown' }}</span> -->
-          <div id="wavesurfer"></div>
+          <div id="wavesurfer" style="width:400px"></div>
         </div>
         <slot name="display" :current-music="currentMusic" :play-stat="playStat">
           <lyrics :current-music="currentMusic" :play-stat="playStat" v-if="showLrc" />
@@ -428,24 +428,24 @@
       loadWave (){
         this.isTogglePanel=false
         return new Promise((resolve,reject)=>{
-          if(this.wavesurfer){
-            this.wavesurfer.stop()
-            document.querySelector("#wavesurfer").childNodes.forEach(item=>{
-              item.remove()
-            })
-            this.wavesurfer=null
-          }
-          this.waveLoading=true
-          this.wavesurfer = wavesurfer.create(this.options)
-          this.wavesurfer.load(this.internalMusic.src);
-          this.wavesurfer.on("ready", () => {
-            this.waveLoading=false
-            this.onAudioCanplay()
-            this.play()
-            if(!this.afterLoadPlay) this.pause()
-            resolve()
-          });
-        })
+            if(this.wavesurfer){
+              this.wavesurfer.stop()
+              document.querySelector("#wavesurfer").childNodes.forEach(item=>{
+                item.remove()
+              })
+              this.wavesurfer=null
+            }
+            this.waveLoading=true
+            this.wavesurfer = wavesurfer.create(this.options)
+            this.wavesurfer.load(this.internalMusic.src);
+            this.wavesurfer.on("ready", () => {
+              this.waveLoading=false
+              this.onAudioCanplay()
+              this.play()
+              if(!this.afterLoadPlay) this.pause()
+              resolve()
+            });
+          })
       },
       // Float mode
 
@@ -488,13 +488,13 @@
       },
       play () {
         this.$emit("play",this.currentMusic)
-        this.isTogglePanel=false
+        // this.isTogglePanel=false
         this.isPlaying=true
         this.wavesurfer.play()
       },
       pause () {
         this.$emit("pause",this.currentMusic)
-        this.isTogglePanel=false
+        // this.isTogglePanel=false
         this.isPlaying=false
         this.wavesurfer.pause()
       },
@@ -690,7 +690,7 @@
       },
       togglePanel (){
         // if(this.isTogglePanel===false) this.showList=false;
-        this.isTogglePanel=true
+        this.isTogglePanel=!this.isTogglePanel
       }
     },
     watch: {
@@ -785,9 +785,9 @@
     overflow: hidden;
     user-select: none;
     line-height: initial;
-    transition: all 0.5s;
+    transition: all 0.2s;
     &.isCollpase{
-      width: 0;
+      width: 90px;
     }
     * {
       box-sizing: content-box;
@@ -902,9 +902,7 @@
     }
   }
   .collpaseBtn{
-    background-color: #e9e9e9;
     padding: 0 3px;
-    color: #aaa;
     display: flex;
     align-items: center;
     cursor: pointer;

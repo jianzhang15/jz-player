@@ -8,6 +8,7 @@
         :music="list3[0]"
         :list="list3"
         listFolded
+        float
       />
     </div>
   </div>
@@ -29,18 +30,19 @@
         list3: [
           {
             title: '前前前世',
-            src: '/api/file/download?audioId=5faa9fb69c1f9b8308da7891',
-          },
-          {
-            title: '前前前世',
-            src: '/api/file/download?audioId=5faa9f0f10986367500528bf',
+            src: '/api/file/download?audioId=5fbcc6857d560d0006a29aa2',
           }
         ],
       }
     },
     methods:{
       playMusic (){
-        this.$refs['player'].toggle()
+        this.list3=[
+          {
+            title: '前前前世',
+            src: '/api/file/download?audioId=5fbcc6857d560d0006a29aa4',
+          }
+        ]
       }
     }
   }

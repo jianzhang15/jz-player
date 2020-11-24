@@ -80,7 +80,7 @@
   @import "../scss/variables";
 
   .aplayer-float {
-    .aplayer-pic:active {
+    .aplayer-pic {
       cursor: move;
     }
   }

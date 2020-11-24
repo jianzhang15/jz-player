@@ -65,11 +65,11 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://192.168.0.135:8078/',
+        target: 'http://192.168.0.133:7103/',
         secure: false,
         changeOrigin: true,
         pathRewrite (path) {
-          return path.replace(/^\/api/, '')
+          return path.replace(/^\/api/, '/api')
         },
       },
     },
