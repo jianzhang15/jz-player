@@ -882,10 +882,6 @@
     }
 
     /* floating player on top */
-    position: relative;
-    &.aplayer-float {
-      z-index: 1;
-    }
     position: fixed;
     width: 500px;
     bottom: 20px;
