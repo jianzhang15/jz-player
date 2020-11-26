@@ -43,7 +43,14 @@
     methods:{
       playMusic (){
         this.list3=[
-          
+          {
+            title: '前前前世',
+            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b7',
+          },
+          {
+            title: '前前前世',
+            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b5',
+          }
         ]
       }
     }

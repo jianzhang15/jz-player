@@ -94,6 +94,7 @@
     LIST: 'list',
     NO_REPEAT: 'no-repeat',
     REPEAT_ONE: 'repeat-one',
+    REPEAT_ONCE: 'repeat-once',
     REPEAT_ALL: 'repeat-all',
   };
 
@@ -708,7 +709,9 @@
       music (music) {
         this.internalMusic = music
       },
-
+      list(list){
+        this.shuffledList = this.getShuffledList()
+      },
       currentMusic: {
         async handler (music) {
           // async
