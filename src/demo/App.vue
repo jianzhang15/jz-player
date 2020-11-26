@@ -7,6 +7,7 @@
         ref="player"
         :music="list3[0]"
         :list="list3"
+        repeat="REPEAT.REPEAT_ONCE"
         listFolded
         float
       />
@@ -30,7 +31,11 @@
         list3: [
           {
             title: '前前前世',
-            src: '/api/file/download?audioId=5fbcc6857d560d0006a29aa2',
+            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b5',
+          },
+          {
+            title: '前前前世',
+            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b7',
           }
         ],
       }
@@ -38,10 +43,7 @@
     methods:{
       playMusic (){
         this.list3=[
-          {
-            title: '前前前世',
-            src: '/api/file/download?audioId=5fbcc6857d560d0006a29aa4',
-          }
+          
         ]
       }
     }

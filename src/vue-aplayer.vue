@@ -413,6 +413,9 @@
             case "REPEAT.REPEAT_ONE":
               return REPEAT.REPEAT_ONE
               break;
+            case "REPEAT.REPEAT_ONCE":
+              return REPEAT.REPEAT_ONCE
+              break;
             default:
               return REPEAT.REPEAT_ALL
               break;
@@ -465,6 +468,8 @@
           this.repeatMode = REPEAT.REPEAT_ONE
         } else if (this.repeatMode === REPEAT.REPEAT_ONE) {
           this.repeatMode = REPEAT.NO_REPEAT
+        }else if (this.repeatMode === REPEAT.REPEAT_ONCE) {
+          this.repeatMode = REPEAT.REPEAT_ONCE
         } else {
           this.repeatMode = REPEAT.REPEAT_ALL
         }
@@ -632,7 +637,13 @@
           this.afterLoadPlay=true
         } else if (this.repeatMode === REPEAT.REPEAT_ONE) {
           this.wavesurfer.seekTo(0)
-        } else if(this.repeatMode === REPEAT.NO_REPEAT){
+        } else if (this.repeatMode === REPEAT.REPEAT_ONCE) {
+          if (this.shouldShuffle && this.playIndex === this.shuffledList.length - 1) {
+            this.shuffledList = this.getShuffledList()
+          }
+          this.playIndex++
+          this.afterLoadPlay=false
+        }else if(this.repeatMode === REPEAT.NO_REPEAT){
           this.$emit("end",this.currentMusic)
           this.pause()
           this.wavesurfer.seekTo(0)
