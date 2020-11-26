@@ -2,9 +2,13 @@
   <div id="app">
     <div class="container">
       <h1 align="center">基于Vue-APlayer修改</h1>
-      <h3 @click="playMusic">点击播放</h3>
+      <h3 @click="init">点击播放</h3>
+      <h3 @click="playMusic1">切换播放列表(1条音频)</h3>
+      <h3 @click="playMusic2">切换播放列表(2条音频)</h3>
       <aplayer
+        v-if="showPlayer"
         ref="player"
+        autoplay
         :music="list3[0]"
         :list="list3"
         repeat="REPEAT.REPEAT_ONCE"
@@ -38,10 +42,22 @@
             src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b7',
           }
         ],
+        showPlayer:false
       }
     },
     methods:{
-      playMusic (){
+      init(){
+        this.showPlayer=true
+      },
+      playMusic1 (){
+        this.list3=[
+          {
+            title: '前前前世',
+            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b7',
+          }
+        ]
+      },
+      playMusic2 (){
         this.list3=[
           {
             title: '前前前世',

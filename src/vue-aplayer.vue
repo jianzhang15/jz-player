@@ -642,6 +642,8 @@
           if (this.shouldShuffle && this.playIndex === this.shuffledList.length - 1) {
             this.shuffledList = this.getShuffledList()
           }
+          this.pause()
+          this.wavesurfer.seekTo(0)
           this.playIndex++
           this.afterLoadPlay=false
         }else if(this.repeatMode === REPEAT.NO_REPEAT){
@@ -711,6 +713,7 @@
       },
       list(list){
         this.shuffledList = this.getShuffledList()
+        this.afterLoadPlay=true
       },
       currentMusic: {
         async handler (music) {
