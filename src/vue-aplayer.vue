@@ -504,6 +504,12 @@
         this.isPlaying=false
         this.wavesurfer.pause()
       },
+      stop () {
+        this.$emit("stop",this.currentMusic)
+        // this.isTogglePanel=false
+        this.isPlaying=false
+        this.wavesurfer.stop()
+      },
 
       // progress bar
 
@@ -711,7 +717,7 @@
       music (music) {
         this.internalMusic = music
       },
-      list(list){
+      list (list){
         this.shuffledList = this.getShuffledList()
         this.afterLoadPlay=true
       },
