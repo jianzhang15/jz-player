@@ -1,5 +1,5 @@
 ## 简介
-本项目是基于vue-aplayer二次开发的适用于PC端的音乐播放器，可以参考这里[vue-aplayer](https://github.com/SevenOutman/vue-aplayer)
+本项目是基于vue-aplayer二次开发的适用于PC端的采用wavesurfer.js的音乐播放器，可以参考这里[vue-aplayer](https://github.com/SevenOutman/vue-aplayer)，原版的Vue-aplayer采用audio标签已被抛弃
 ## 安装
 
 ### Node
@@ -17,13 +17,6 @@ $ npm i jz-player
 
 ![Screenshot](https://github.com/jianzhang15/jz-player/blob/main/demo.png)
 
-## 运行时要求
-
-- [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-- [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)
-
-
-
 ## 使用
 
 ```HTML
@@ -31,7 +24,7 @@ $ npm i jz-player
   :music="{
     title: 'secret base~君がくれたもの~',
     artist: 'Silent Siren',
-    src: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
+    src: 'http://music.163.com/song/media/outer/url?id=447925558.mp3',
     pic: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.jpg'
   }"
 />
@@ -62,34 +55,17 @@ new Vue({
 | mutex | Boolean | `true` | 是否在该播放器播放时暂停其他播放器 |
 | theme | String | `'#41b883'` | 主题色。如果当前歌曲也设置了 `theme` 则以歌曲的为准 |
 | shuffle | Boolean | `false` | 随机播放 |
-| repeat | String | `'no-repeat'` | 轮播模式。值可以是 `'repeat-one'`（单曲循环）`'repeat-all'`（列表循环）或者 `'no-repeat'`（不循环）。为了好记，还可以使用对应的 `'music'` `'list'` `'none'` |
+| repeat | String | `'REPEAT.REPEAT_ALL'` | 循环模式。值可以是 `'REPEAT.REPEAT_ONE'`（单曲循环）`'REPEAT.REPEAT_ONCE'`（列表播放1遍）`'REPEAT.REPEAT_ALL'`（列表循环）或者 `'REPEAT.NO_REPEAT'`（不循环） |
 | listMaxHeight | String | *none* | 播放列表面板最大高度 |
 | listFolded | Boolean | `false` | 默认收起播放列表 |
-| narrow |  | | DEPRECATED, 请使用 `mini` |
-| listmaxheight |  |  | DEPRECATED, 请使用 `listMaxHeight` |
-| showlrc |  |  | DEPRECATED, 请使用 `showLrc` |
+| autoplay | Boolean | `false`  | 自动播放。如果多个 mutex 播放器设置了 autoplay，只有第一个会自动播放（因）|
+| muted | Boolean | `false`  | 静音 |
+| volume | Number | `0.8`  | 播放音量，0为最小，1为最大 |
 
-> 如果你是用的是 Vue@2.3.0+, 你可以在 `music` `shuffle` 和 `repeat` 上使用 [`.sync` 修饰符](https://cn.vuejs.org/v2/guide/components.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)。
-
-
-
-### 将 Audio 属性作为 props
-
-从 `v1.4.0` 开始，我们选取了一些 `<audio>` 属性并将它们运用为 props
-
-| 名称 | 类型 | 默认值 | 是否可变 | 说明 |
-| ---- | ---- | ------- | ---------- | ---------- |
-| autoplay | Boolean | `false` | false | 自动播放。如果多个 mutex 播放器设置了 autoplay，只有第一个会自动播放|
-| controls | Boolean | `false` | true | 显示原生 audio 元素（在播放器面板和播放列表面板之间） |
-| muted | Boolean | `false` | true | 静音 |
-| preload | String | *none* | true | The way to load music, can be 'none' 'metadata' or 'auto' |
-| volume | Number | `0.8` | true | 播放音量 |
-
->  `muted` 和 `volume` 也可以使用 `.sync` 修饰符，你可以利用这一点做一些自定义的控制
+> 如果你是用的是 Vue@2.3.0+, 你可以在 `music` `shuffle` 和 `repeat` 上使用 [`.sync` 修饰符](https://cn.vuejs.org/v2/guide/components.html#sync-%E4%BF%AE%E9%A5%B0%E7%AC%A6)，`muted` 和 `volume` 也可以使用 `.sync` 修饰符，你可以利用这一点做一些自定义的控制
 
 
-
-### 音乐信息
+### Props.music
 
 `music` props 包含了当前播放歌曲的如下信息。
 
@@ -101,19 +77,17 @@ new Vue({
 | pic | *none* | 封面图片 URL |
 | lrc | *none* | LRC 歌词或者歌词文件的 URL |
 | theme | *none* | 歌曲的主题色，会覆盖播放器的主题色 |
-| url | | DEPRECATED, 请使用 `src` |
-| author |  | DEPRECATED, 请使用 `artist` |
 
 
 
-### 事件
+### Events
 
-从 `v1.4.0` 开始, Vue-APlayer 会抛出它内部的 `<audio>` 元素上触发的所有媒体事件. 你可以[查阅 MDN 上的这张完整列表](https://developer.mozilla.org/zh-CN/docs/Web/Guide/Events/Media_events).
-
-在 `v1.4.0` 以前, 我们有一些自定义事件，如 `play` `pause` `canplay` `playing` `ended` `error`, 它们现在已全部被废弃。
-
-
-
+| 事件 | 参数 | 说明 |
+| -------- | ------- | ----------- |
+| play | `currentMusic` | 播放回调事件，会返回当前播放的音频Object |
+| pause | `currentMusic` | 暂停回调事件，会返回当前播放的音频Object |
+| stop | `currentMusic` | 停止回调事件，会返回当前播放的音频Object |
+| end | `currentMusic` | 播放完回调事件，仅当repeat模式为“REPEAT.NO_REPEAT”生效，会返回当前播放的音频Object |
 ## 进阶使用
 
 ### 自适应主题色
@@ -128,12 +102,6 @@ new Vue({
 <!-- 或者你选择的其他 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/colorthief@2.0.2/src/color-thief.js"></script>
 ```
-
-
-
-### 支持 HLS
-
-从 `v1.3.0` 开始, Vue-APlayer 可选支持 `*.m3u8` 音频. 你需要做的就是在项目中安装 [hls.js](https://github.com/video-dev/hls.js) 包即可.
 
 
 ### `disableVersionBadge`
@@ -153,14 +121,3 @@ VueAPlayer.disableVersionBadge = true
 这个 slot 代表播放器主体上显示的内容, 默认是滚动歌词.
 
 这个 slot 中的组件会接收两个 props: `currentMusic` 和 `playStat`.
-
-
-
-## 贡献
-
-Clone 这个 repo, **使用 Yarn 开发**
-
-```
-$ yarn
-$ yarn run dev
-```

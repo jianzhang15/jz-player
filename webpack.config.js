@@ -11,12 +11,12 @@ module.exports = {
     umdNamedDefine: true
   },
   externals: {
-    'hls.js': {
-      amd: 'hls.js',
-      commonjs: 'hls.js',
-      commonjs2: 'hls.js',
-      root: 'Hls'
-    },
+    // 'hls.js': {
+    //   amd: 'hls.js',
+    //   commonjs: 'hls.js',
+    //   commonjs2: 'hls.js',
+    //   root: 'Hls'
+    // },
     'vue':  {
       amd: 'vue',
       commonjs: 'vue',

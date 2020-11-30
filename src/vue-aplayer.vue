@@ -785,9 +785,9 @@
       if (activeMutex === this) {
         activeMutex = null
       }
-      if (this.hls) {
-        this.hls.destroy()
-      }
+      // if (this.hls) {
+      //   this.hls.destroy()
+      // }
     },
   }
 

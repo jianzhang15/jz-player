@@ -64,12 +64,12 @@ module.exports = {
     port: 3000,
     disableHostCheck: true,
     proxy: {
-      '/api': {
-        target: 'http://192.168.0.135:8078/',
+      '/song': {
+        target: 'http://music.163.com/',
         secure: false,
         changeOrigin: true,
         pathRewrite (path) {
-          return path.replace(/^\/api/, '')
+          return path.replace(/^\/song/, '/song')
         },
       },
     },

@@ -36,11 +36,11 @@
         list3: [
           {
             title: '前前前世',
-            src: 'https://m10.music.126.net/20201127200739/02e17c0534167fc65484b08039e7d21c/yyaac/obj/wonDkMOGw6XDiTHCmMOi/2183399114/e1a7/6385/f7cf/4f70fdc1a0fb9ab704268c0fb7bbfe6b.m4a',
+            src: '/song/media/outer/url?id=447925558.mp3',
           },
           {
             title: '前前前世',
-            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b7',
+            src: '/song/media/outer/url?id=447925558.mp3',
           }
         ],
         showPlayer:false
@@ -57,7 +57,7 @@
         this.list3=[
           {
             title: '前前前世',
-            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b7',
+            src: '/song/media/outer/url?id=447925558.mp3',
           }
         ]
       },
@@ -65,11 +65,11 @@
         this.list3=[
           {
             title: '前前前世',
-            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b7',
+            src: '/song/media/outer/url?id=447925558.mp3',
           },
           {
             title: '前前前世',
-            src: '/api/file/download?audioId=5fbe655bbe8d985ef85af7b5',
+            src: '/song/media/outer/url?id=447925558.mp3',
           }
         ]
       }
