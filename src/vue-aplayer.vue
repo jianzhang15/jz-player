@@ -244,14 +244,7 @@
           playedTime: 0,
         },
         showList: !this.listFolded,
-
-        // handle Promise returned from audio.play()
-        // @see https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
-        audioPlayPromise: Promise.resolve(),
-
-
         // @since 1.2.0 float mode
-
         floatOriginX: 0,
         floatOriginY: 0,
         floatOffsetLeft: 0,
@@ -669,22 +662,12 @@
       },
 
       initAudio () {
-
         // event handlers
         // they don't emit native media events
-
-        // this.audio.addEventListener('play', this.onAudioPlay)
-        // this.audio.addEventListener('pause', this.onAudioPause)
-        // this.audio.addEventListener('abort', this.onAudioPause)
-        // this.audio.addEventListener('progress', this.onAudioProgress)
-        // this.audio.addEventListener('durationchange', this.onAudioDurationChange)
         this.wavesurfer.on('seek',this.onAudioSeeking)
         this.wavesurfer.on('audioprocess',this.onAudioTimeUpdate)
         this.wavesurfer.on('volume',this.onAudioVolumeChange)
         this.wavesurfer.on('finish',this.onAudioEnded)
-        // if (this.currentMusic) {
-        //   this.audio.src = this.currentMusic.src
-        // }
       },
 
       setSelfAdaptingTheme () {
@@ -864,12 +847,6 @@
         }
       }
     }
-
-    audio[controls] {
-      display: block;
-      width: 100%;
-    }
-
     // Mini mode
     &.aplayer-mini {
       width: $aplayer-height;
