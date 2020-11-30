@@ -1,6 +1,6 @@
 {
   "name": "jz-player",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "description": "Easy-to-use music player for Vue 2.x",
   "main": "dist/JZplayer.min.js",
   "files": [

@@ -692,7 +692,7 @@
         }
       },
       togglePanel (){
-        // if(this.isTogglePanel===false) this.showList=false;
+        if(this.isTogglePanel===false) this.showList=false;
         this.isTogglePanel=!this.isTogglePanel
       }
     },
